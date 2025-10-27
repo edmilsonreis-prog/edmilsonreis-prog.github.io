@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>AdoteAí — Cadastre um Pet</title>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png" class="logo">
+        </div>
+     
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="cadastre.html">Cadastre um Pet</a></li>
+            <li><a href="pets.html">Pets</a></li>
+            <li><a href="localizacao.html">Localização</a></li>
+        </ul>
+    </nav>
+</header>
+<br>
+<main>
+    <section class="cadastre-pet">
+        <div class="container">
+            <div style="margin-top: 50px;">
+            <h2>Cadastre um Pet
+                
+            </h2>
+            <form action="#" method="post" enctype="multipart/form-data" class="cadastro-form">
+                <label for="nome">Nome do Pet:</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite o nome do pet" required>
+
+                <label for="tipo">Tipo de Pet:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecione</option>
+                    <option value="cachorro">Cachorro</option>
+                    <option value="gato">Gato</option>
+                    <option value="outros">Outros</option>
+                </select>
+
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao" placeholder="Digite uma breve descrição" required></textarea>
+
+                <label for="foto">Foto do Pet:</label>
+                <input type="file" id="foto" name="foto" accept="image/*" required>
+
+                <button type="submit" class="btn">CADASTRE UM PET</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>2025 AdoteAí - Todos os direitos reservados</p>
+</footer>
+
+</body>
+</html>
