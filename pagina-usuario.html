@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Adoteaí - Área do Usuário</title>
+</head>
+
+<body> 
+  <header>
+    <nav class="navbar">
+      <div class="logo-container"> <img
+          src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png"
+          class="logo"></div>
+      <ul class="nav-links"> <a href="index.html#home">Inicio</a>
+        <li><a href="index.html#sobre">Sobre</a></li>
+        <li><a href="index.html#pets">Pets</a></li>
+        <li><a href="index.html#localização">Localização</a></li>
+      </ul>
+    </nav>
+  </header>
+    <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        /* Adiciona espaço no topo para o conteúdo não ficar escondido atrás do navbar */
+        padding-top: 60px; 
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        text-align: center;
+        /* Garante que o container esteja visível */
+        margin-top: 200px; 
+    }
+
+    h1 {
+        margin-bottom: 2rem;
+        color: #444;
+        /* Adicionei uma cor forte para garantir que você o veja */
+        color: #333; 
+    }
+
+    .menu {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 2rem auto; 
+        text-align: center;
+        
+        /* Reduzimos o margin-top para que o h1 possa aparecer acima */
+        margin-top: 50px; 
+    }
+
+    .menu a {
+        background: #eca487;
+        color: #fff;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: 0.2s;
+    }
+
+    .menu a:hover {
+        opacity: 0.8;
+        transform: translateY(-2px);
+    }
+</style>
+</head>
+<body>
+
+
+<div class="container">
+    <h1 id="boasVindas"></h1> 
+    </div>
+
+    <div class="menu">
+        <a href="cadastrar-pet.html">Cadastrar Pet</a>
+        <a href="index.html#pets">Visualizar Pets</a>
+    </div>
+</div>
+
+<script>
+    // 1. Função para pegar o parâmetro 'nome' da URL
+    function getNomeDaURL() {
+        // Pega a string de consulta (ex: "?nome=Fulano")
+        const params = new URLSearchParams(window.location.search);
+        // Retorna o valor do parâmetro 'nome' (ex: "Fulano")
+        return params.get('nome');
+    }
+
+    // 2. Função principal para exibir a mensagem
+    function exibirBoasVindas() {
+        const nomeUsuario = getNomeDaURL(); // Pega o nome da URL
+        const elementoH1 = document.getElementById('boasVindas');
+
+        if (nomeUsuario) {
+            // Se o nome existir na URL, exibe a saudação
+            elementoH1.textContent = "Bem-vindo(a), " + decodeURIComponent(nomeUsuario) + "!";
+        } else {
+            // Se o nome não existir (usuário acessou direto ou perdeu o parâmetro)
+            elementoH1.textContent = "Bem-vindo(a) à Área do Usuário!";
+        }
+    }
+
+    // 3. Executa a função quando a página carregar
+    exibirBoasVindas();
+
+    // A função guardaDados original foi removida por ser desnecessária nesta página.
+</script>
+
+
+</body>
+</html>

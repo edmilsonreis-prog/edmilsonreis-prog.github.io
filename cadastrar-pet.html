@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> 
+    <title>AdoteAí — Cadastre um Pet</title>
+    
+    <style>
+        body {
+            /* Fundo padrão do cadastro de usuário */
+            background: #f4f4f4; 
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            /* Garante que o conteúdo não fique sob o header fixo */
+            padding-top: 80px; 
+        }
+
+        /* Centraliza o formulário no meio da tela */
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            /* Altura mínima para permitir a centralização vertical */
+            min-height: calc(100vh - 80px); 
+            padding: 20px 0;
+        }
+        
+        /* Estilo do Container (Mantendo o padrão compacto de 350px, se definido no style.css) */
+        .cadastre-pet .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            width: 350px; 
+            max-width: 90%; 
+            margin-top: 0; /* Removido o conflito com margin-top de 50px */
+            text-align: center;
+        }
+
+        /* O estilo dos inputs, labels e botões deve estar no style.css para manter a consistência. */
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png" class="logo">
+        </div>
+     
+        <ul class="nav-links"> 
+            <li><a href="index.html#home">Inicio</a></li>
+            <li><a href="index.html#sobre">Sobre</a></li>
+            <li><a href="index.html#pets">Pets</a></li>
+            <li><a href="index.html#localização">Localização</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section class="cadastre-pet">
+        <div class="container">
+            <h2>Cadastre um Pet</h2>
+            
+            <form id="pet-form" onsubmit="return false;" class="cadastro-form">
+                <label for="nome">Nome do Pet:</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite o nome do pet" required>
+
+                <label for="tipo">Tipo de Pet:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecione</option>
+                    <option value="Cachorro">Cachorro</option>
+                    <option value="Gato">Gato</option>
+                    <option value="Outros">Outros</option>
+                </select>
+
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao" placeholder="Digite uma breve descrição" required></textarea>
+
+                <label for="foto">Foto do Pet:</label>
+                <input type="file" id="foto" name="foto" accept="image/*" required>
+
+                <button type="button" onclick="salvarPet()" class="btn">CADASTRE UM PET</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>2025 AdoteAí - Todos os direitos reservados</p>
+</footer>
+
+<script type="module">
+    // Importa as funções necessárias do SDK do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // Sua configuração do Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
+        authDomain: "adoteai.firebaseapp.com",
+        projectId: "adoteai",
+        storageBucket: "adoteai.firebasestorage.app",
+        messagingSenderId: "936118376881",
+        appId: "1:936118376881:web:704edb4cb3b861fa58c590",
+        measurementId: "G-5SWYF0Y1JK"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app); // Inicializa o Firestore
+
+    // Torna a função salvarPet global (acessível pelo onclick)
+    window.salvarPet = async function() {
+        // 1. Recupera os valores dos campos
+        const nome = document.getElementById('nome').value.trim();
+        const tipo = document.getElementById('tipo').value;
+        const descricao = document.getElementById('descricao').value.trim();
+        const fotoInput = document.getElementById('foto');
+        
+        if (!nome || !tipo || !descricao || fotoInput.files.length === 0) {
+            alert("Por favor, preencha todos os campos e selecione uma foto.");
+            return;
+        }
+
+        // 2. Cria o objeto Pet
+        const novoPet = {
+            nome: nome,
+            tipo: tipo,
+            descricao: descricao,
+            // A foto é complexa, salvamos o nome do arquivo para referência
+            nomeFoto: fotoInput.files[0].name, 
+            dataCadastro: serverTimestamp() // Garante data de registro precisa
+        };
+
+        // 3. Salva no banco de dados "pets" do Firebase
+        try {
+            await addDoc(collection(db, "pets"), novoPet);
+            alert(`Pet "${nome}" cadastrado com sucesso e está visível para todos!`);
+            // Limpa o formulário após o sucesso
+            document.getElementById('pet-form').reset(); 
+            // Opcional: Redireciona para a página de pets
+            // window.location.href = "pets.html"; 
+        } catch (error) {
+            console.error("Erro ao cadastrar pet: ", error);
+            alert("Erro ao cadastrar pet. Verifique o console.");
+        }
+    }
+</script>
+
+</body>
+</html>

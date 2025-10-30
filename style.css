@@ -5,10 +5,18 @@
     box-sizing: border-box;
 }
 
+html{
+    scroll-behavior: smooth;
+}
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
+
+
+
 }
 
 .container {
@@ -269,79 +277,11 @@ header {
     opacity: 0.85;
 }
 {
-<p style="white-space: pre-line;">
+style="white-space: pre-line;">
 Primeira linha
 Segunda linha
 Terceira linha
-</p>
-}
-body {
-scroll-behavior: smooth;
+
 }
 
-{
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #fca78f; /* cor do seu arquivo */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
 
-        .cadastro-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            width: 350px;
-        }
-
-        .cadastro-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .cadastro-container input[type="text"],
-        .cadastro-container input[type="email"],
-        .cadastro-container input[type="password"],
-        .cadastro-container input[type="date"],
-        .cadastro-container input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        .cadastro-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #fca78f;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .cadastro-container button:hover {
-            background-color: #e59479;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .login-link a {
-            color: #fca78f;
-            text-decoration: none;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
