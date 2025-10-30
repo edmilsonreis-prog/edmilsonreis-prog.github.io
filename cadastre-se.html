@@ -8,7 +8,7 @@
   <title>Adoteaí - Cadastro de Usuário</title>
 </head>
 
-<body> 
+<body>
     <header>
         <nav class="navbar">
           <div class="logo-container"> <img
@@ -21,7 +21,7 @@
           </ul>
         </nav>
     </header>
-  
+
     <style>
         body {
           font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@
           display: flex;
           padding-top: 60px; 
         }
-    
+
         .container {
           background: #fff;
           padding: 20px;
@@ -40,7 +40,7 @@
           width: 400px;
           margin: 70px auto; 
         }
-    
+
         input,
         button {
           width: 100%;
@@ -50,22 +50,22 @@
           border: 1px solid #ccc;
           font-size: 14px
         }
-    
+
         button {
           background: #eca487;
           color: #fff;
           border: none;
           cursor: pointer
         }
-    
+
         button:hover {
           opacity: .9
         }
     </style>
-  
+
     <div class="container">
       <h2>Cadastro de Usuário</h2>
-      <form id="cadastro-form"> 
+      <form id="cadastro-form" autocomplete="off"> 
         <input type="text" name="nome" id="nome" placeholder="Nome completo" required /> 
         <input type="email" name="email" id="email" placeholder="E-mail" required /> 
         <input type="password" name="senha" id="senha" placeholder="Senha" required /> 
@@ -75,7 +75,7 @@
         <input type="date" name="nascimento" id="nascimento" placeholder="Data de nascimento" /> 
         <input type="number" name="idade" id="idade" placeholder="Idade" min="0" />       
           
-        <button type="button" onclick="salvarUsuario()">Cadastrar</button>
+        <button type="submit">Cadastrar</button>
         <p style="text-align:center;font-size:14px;margin-top:10px;">Já tem cadastro? <a href="login.html">Entrar</a>
         </p>
       </form>
@@ -88,7 +88,6 @@
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         
         // ⚠️ CONFIGURAÇÃO DO FIREBASE (USE SEUS DADOS REAIS AQUI)
-        // Estes dados foram extraídos das imagens do seu projeto.
         const firebaseConfig = {
             apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
             authDomain: "adoteai.firebaseapp.com",
@@ -102,16 +101,16 @@
         // Inicializa o Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app); 
-        const auth = getAuth(app); // Inicializa o serviço de autenticação
+        const auth = getAuth(app); 
         
-        // 2. FUNÇÃO PARA SALVAR O USUÁRIO DE FORMA SEGURA
-        window.salvarUsuario = async function() {
+        // A função não precisa mais do 'window.' se for chamada via EventListener
+        async function salvarUsuario() {
             // Recupera os valores dos campos
             const nome = document.getElementById('nome').value.trim();
             const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value; 
             
-            // ⚠️ Validações obrigatórias
+            // Validações obrigatórias
             if (!nome || !email || !senha) {
                 alert("Por favor, preencha os campos Nome, E-mail e Senha.");
                 return;
@@ -121,15 +120,14 @@
                 return;
             }
 
-            // 3. Tenta CRIAR o usuário com E-mail e Senha (Seguro)
+            // Tenta CRIAR o usuário com E-mail e Senha
             try {
-                // Esta função do Auth cuida da criptografia da senha
                 const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
                 const user = userCredential.user;
 
-                // 4. Salva os DADOS ADICIONAIS no Firestore (sem a senha)
+                // Salva os DADOS ADICIONAIS no Firestore (sem a senha)
                 const dadosUsuario = {
-                    uid: user.uid, // O ID gerado pelo Firebase Auth
+                    uid: user.uid,
                     nome: nome,
                     email: email,
                     telefone: document.getElementById('telefone').value,
@@ -159,10 +157,18 @@
                     mensagemErro = "A senha deve ser mais forte (mínimo 6 caracteres).";
                 } else if (error.code === 'auth/invalid-email') {
                     mensagemErro = "O e-mail fornecido não é válido.";
+                } else if (error.code === 'auth/network-request-failed') {
+                    mensagemErro = "Falha na conexão de rede. Verifique sua internet.";
                 }
                 alert(mensagemErro);
             }
         }
+
+        // CORREÇÃO 2: Adiciona um Event Listener ao formulário para garantir a chamada da função
+        document.getElementById('cadastro-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // IMPEDE QUE A PÁGINA RECARREGUE
+            salvarUsuario(); // Chama a função
+        });
     </script>
 </body>
 </html>
