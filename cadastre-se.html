@@ -4,11 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <title>Adoteaí - Cadastro de Usuário</title>
 </head>
 
 <body>
+    <div class="background-image"></div>
+    
     <header>
         <nav class="navbar">
           <div class="logo-container"> <img
@@ -18,49 +21,114 @@
             <li><a href="index.html#sobre">Sobre</a></li>
             <li><a href="index.html#pets">Pets</a></li>
             <li><a href="index.html#localização">Localização</a></li>
+           <li><a href="teste-login.html">Entrar</a></li>
+            <li><a href="index.html">Voltar</a></li>
           </ul>
         </nav>
     </header>
 
     <style>
+        :root {
+            --color-primary: #eca487; /* Salmão/Coral do cabeçalho */
+            --color-secondary: #eca487; /* Rosa/Laranja Suave do botão */
+            --color-text-dark: #333;
+        }
+
+        /* INSERÇÃO DO BACKGROUND-IMAGE E ESTILOS MÍNIMOS PARA O BODY */
         body {
           font-family: Arial, sans-serif;
           background: #f4f4f4;
           margin: 0;
           padding: 0;
           display: flex;
-          padding-top: 60px; 
+          flex-direction: column;
+          align-items: center;
+          padding-top: 60px; /* Para acomodar o header */
+          /* MUDANÇAS MÍNIMAS AQUI PARA O FUNDO FUNCIONAR */
+          position: relative; 
+          min-height: 100vh;
+          /* FIM DAS MUDANÇAS MÍNIMAS */
         }
+        
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.postimg.cc/mg5svcpV/fundo-pets.png"); 
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.8) blur(2px); 
+            z-index: -1;
+        }
+        /* FIM DA INSERÇÃO */
 
+
+        .navbar {
+            /* Estilo básico para o navbar, se não estiver em style.css */
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--color-primary);
+            color: var(--color-text-dark);
+            z-index: 1000;
+        }
+        
         .container {
           background: #fff;
-          padding: 20px;
+          padding: 30px;
           border-radius: 20px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-          width: 400px;
-          margin: 70px auto; 
+          box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+          width: 100%;
+          max-width: 400px;
+          margin: 70px auto 20px auto; 
+          /* MUDANÇA MÍNIMA AQUI PARA O FUNDO FUNCIONAR */
+          z-index: 1; 
+          /* FIM DA MUDANÇA MÍNIMA */
+        }
+        
+        h2 {
+            color: var(--color-pre);
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         input,
         button {
           width: 100%;
-          padding: 10px;
+          padding: 12px;
           margin: 8px 0;
-          border-radius: 5px;
+          border-radius: 8px;
           border: 1px solid #ccc;
           font-size: 14px
         }
 
         button {
-          background: #eca487;
-          color: #fff;
+          background: var(--color-secondary); /* Usa a cor do botão da paleta */
+          color: var(--color-text-dark);
           border: none;
-          cursor: pointer
+          cursor: pointer;
+          font-weight: 600;
+          margin-top: 15px;
+          transition: background 0.3s ease;
         }
 
         button:hover {
-          opacity: .9
+          background: #e0a39a;
+          opacity: 1;
         }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        
     </style>
 
     <div class="container">
@@ -68,24 +136,26 @@
       <form id="cadastro-form" autocomplete="off"> 
         <input type="text" name="nome" id="nome" placeholder="Nome completo" required /> 
         <input type="email" name="email" id="email" placeholder="E-mail" required /> 
-        <input type="password" name="senha" id="senha" placeholder="Senha" required /> 
+        <input type="password" name="senha" id="senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6" /> 
         <input type="tel" name="telefone" id="telefone" placeholder="Telefone" /> 
+        <label for="foto" style="display: block; margin-top: 10px; font-size: 12px; color: #666;">Foto de Perfil (Opcional):</label>
         <input type="file" name="foto" id="foto" accept="image/*" /> 
         <input type="text" name="endereco" id="endereco" placeholder="Endereço completo" required /> 
+        <label for="nascimento" style="display: block; margin-top: 10px; font-size: 12px; color: #666;">Data de Nascimento:</label>
         <input type="date" name="nascimento" id="nascimento" placeholder="Data de nascimento" /> 
         <input type="number" name="idade" id="idade" placeholder="Idade" min="0" />       
           
         <button type="submit">Cadastrar</button>
-        <p style="text-align:center;font-size:14px;margin-top:10px;">Já tem cadastro? <a href="login.html">Entrar</a>
+        <p style="text-align:center;font-size:14px;margin-top:15px;">Já tem cadastro? <a href="teste-login.html">Entrar</a>
         </p>
       </form>
     </div>
 
     <script type="module">
-        // Importa as funções necessárias, incluindo o Authentication
+        // Importa as funções necessárias, incluindo updateProfile
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         
         // ⚠️ CONFIGURAÇÃO DO FIREBASE (USE SEUS DADOS REAIS AQUI)
         const firebaseConfig = {
@@ -103,29 +173,44 @@
         const db = getFirestore(app); 
         const auth = getAuth(app); 
         
-        // A função não precisa mais do 'window.' se for chamada via EventListener
         async function salvarUsuario() {
+            // Desabilita o botão para evitar cliques duplos
+            const btn = document.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = 'Cadastrando...';
+            btn.disabled = true;
+
             // Recupera os valores dos campos
             const nome = document.getElementById('nome').value.trim();
             const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value; 
             
-            // Validações obrigatórias
+            // Validações
             if (!nome || !email || !senha) {
                 alert("Por favor, preencha os campos Nome, E-mail e Senha.");
+                btn.textContent = originalText;
+                btn.disabled = false;
                 return;
             }
             if (senha.length < 6) {
                 alert("A senha deve ter pelo menos 6 caracteres.");
+                btn.textContent = originalText;
+                btn.disabled = false;
                 return;
             }
 
-            // Tenta CRIAR o usuário com E-mail e Senha
             try {
+                // 1. Cria o usuário no Firebase Authentication
                 const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
                 const user = userCredential.user;
 
-                // Salva os DADOS ADICIONAIS no Firestore (sem a senha)
+                // 2. DEFINE O NOME DE EXIBIÇÃO (user.displayName)
+                // ESSENCIAL para a página do usuário puxar o nome!
+                await updateProfile(user, {
+                    displayName: nome
+                });
+
+                // 3. Salva os DADOS ADICIONAIS no Firestore
                 const dadosUsuario = {
                     uid: user.uid,
                     nome: nome,
@@ -137,15 +222,13 @@
                     dataCadastro: serverTimestamp()
                 };
 
-                // Adiciona na coleção "usuarios"
                 await addDoc(collection(db, "usuarios"), dadosUsuario);
                 
                 alert(`Bem-vindo(a), ${nome}! Seu cadastro foi concluído com sucesso.`);
                 document.getElementById('cadastro-form').reset();
                 
-                // Redireciona para a página de boas-vindas
-                const nomeCodificado = encodeURIComponent(nome); 
-                window.location.href = "pagina-usuario.html?nome=" + nomeCodificado;
+                // 4. Redireciona para a página do usuário logado
+                window.location.href = "pagina-usuario.html";
 
             } catch (error) {
                 console.error("Erro no Cadastro:", error.code, error.message);
@@ -154,20 +237,24 @@
                 if (error.code === 'auth/email-already-in-use') {
                     mensagemErro = "Este e-mail já está em uso.";
                 } else if (error.code === 'auth/weak-password') {
-                    mensagemErro = "A senha deve ser mais forte (mínimo 6 caracteres).";
+                    mensagemErro = "A senha deve ter no mínimo 6 caracteres.";
                 } else if (error.code === 'auth/invalid-email') {
                     mensagemErro = "O e-mail fornecido não é válido.";
                 } else if (error.code === 'auth/network-request-failed') {
                     mensagemErro = "Falha na conexão de rede. Verifique sua internet.";
                 }
                 alert(mensagemErro);
+            } finally {
+                // Restaura o botão em caso de erro
+                btn.textContent = originalText;
+                btn.disabled = false;
             }
         }
 
-        // CORREÇÃO 2: Adiciona um Event Listener ao formulário para garantir a chamada da função
+        // Adiciona um Event Listener ao formulário para chamar a função de cadastro
         document.getElementById('cadastro-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // IMPEDE QUE A PÁGINA RECARREGUE
-            salvarUsuario(); // Chama a função
+            event.preventDefault(); // Impede o recarregamento padrão da página
+            salvarUsuario(); 
         });
     </script>
 </body>

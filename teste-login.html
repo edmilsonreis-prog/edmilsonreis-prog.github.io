@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AdoteAI</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+   <style>
+        :root {
+            --color-primary: #F7A79D; /* Salmão/Coral */
+            --color-secondary: #F2B2A8; /* Rosa/Laranja Suave do botão */
+            --color-text-dark: #333;
+            --color-text-light: #fff; /* Usado para texto do Header */
+            --color-placeholder: #888;
+            --color-input-bg: #f9f9f9;
+            --color-input-border: #ddd;
+            --color-link: #F2B2A8; 
+            --color-header-bg: transparent; /* Variável original */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; 
+            overflow: hidden; 
+            position: relative; 
+        }
+
+        /* --- ESTILOS DA BARRA DE NAVEGAÇÃO (AJUSTADO PARA O PADRÃO DO PROJETO) --- */
+       
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: cente;             /* alinha logo e texto */
+  gap: 50px;                       /* espaço entre logo e nome */
+}
+header {
+    background-color: #eca487;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    margin: 0 auto;
+}
+/* Imagem da logo */
+.logo {
+  width: 70px;
+  height: auto;
+  object-fit: contain;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: rgba(134, 97, 48, 0.938);
+}
+.hero {
+    background: linear-gradient(rgba(44,24,16,0.7), rgba(44,24,16,0.7)),
+    url('https://img.pikbest.com/backgrounds/20250315/world-happiness-day-generate-an-image-of-a-dog-and-cat-playing-together_11597350.jpg!w700wp') 
+    center / cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-top: 60px;
+}
+
+.hero-conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-conteudo h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero-conteudo p {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+}
+        /* --- FIM ESTILOS BARRA DE NAVEGAÇÃO --- */
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.postimg.cc/mg5svcpV/fundo-pets.png"); 
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.8) blur(2px); 
+            z-index: -1;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 400px; 
+            padding: 20px;
+            z-index: 1; 
+            /* Ajuste o padding-top de volta ou mantenha se necessário para o seu layout */
+            padding-top: 100px; 
+        }
+
+        /* ... (Restante dos estilos do formulário, mantidos como antes) ... */
+
+        .login-box {
+            /* Mantendo a cor de fundo do formulário */
+            background-color: rgba(255, 255, 255, 0.95); 
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-image {
+            width: 50px; 
+            height: 50px;
+            margin-right: 20px;
+            border-radius: 50%; 
+            object-fit: cover;
+            background-color: var(--color-primary); 
+        }
+
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: var(--color-text-dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 45px; 
+            border: 1px solid var(--color-input-border);
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--color-text-dark);
+            background-color: var(--color-input-bg);
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input::placeholder {
+            color: var(--color-placeholder);
+        }
+
+        .input-group input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .input-group .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1em;
+        }
+
+        .input-group .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #666;
+        }
+
+        .remember-me input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: var(--color-primary); 
+        }
+
+        .forgot-password {
+            color: var(--color-link);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--color-secondary); 
+            color: var(--color-text-dark);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-login:hover {
+            background-color: #eca487; 
+            transform: translateY(-2px);
+        }
+
+        .signup-link {
+            margin-top: 30px;
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        .signup-link a, .back-to-login {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover, .back-to-login:hover {
+            color: #d18d84; 
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+   <header>
+    <nav class="navbar">
+      <div class="logo-container"> <img
+          src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png"
+          class="logo"></div>
+      <ul class="nav-links"> 
+        <li><a href="index.html#home">Inicio</a></li>
+        <li><a href="index.html#sobre">Sobre</a></li>
+        <li><a href="index.html#pets">Pets</a></li>
+        <li><a href="index.html#localização">Localização</a></li>
+      </ul>
+    </nav>
+  </header>
+    
+    <div class="background-image"></div>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="header-logo">
+                <img src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png" alt="Logo Adoteaí" class="logo-image">
+                <span class="logo-text">Adoteaí</span>
+            </div>
+            <h1>Bem-vindo(a) de volta!</h1>
+            <p class="subtitle">Faça login para encontrar seu novo amigo.</p>
+
+            <form class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="text" id="email" placeholder="E-mail ou CPF/CNPJ" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="password" placeholder="Senha" required>
+                    <i class="fas fa-eye toggle-password"></i>
+                </div>
+                <div class="options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Lembrar-me</label>
+                    </div>
+                    <a href="reset-password.html" class="forgot-password">Esqueceu sua senha?</a>
+                </div>
+                <button type="submit" class="btn-login">ENTRAR</button>
+            </form>
+
+            <p class="signup-link">
+                Ainda não tem conta? <a href="cadastre-se.html">Cadastre-se agora!</a>
+            </p>
+        </div>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- 1. CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
+            authDomain: "adoteai.firebaseapp.com",
+            projectId: "adoteai",
+            storageBucket: "adoteai.firebasestorage.app",
+            messagingSenderId: "936118376881",
+            appId: "1:936118376881:web:704edb4cb3b861fa58c590",
+            measurementId: "G-5SWYF0Y1JK"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = app.auth(); 
+        
+        // --- FUNÇÃO AUXILIAR PARA VALIDAR E-MAIL (NECESSÁRIO PARA O FIREBASE) ---
+        function isValidEmail(input) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(input);
+        }
+
+        // --- 2. LÓGICA DE LOGIN E EVENT LISTENERS ---
+        
+        // Funcionalidade de mostrar/esconder senha
+        const togglePassword = document.querySelector('.toggle-password');
+        const password = document.getElementById('password');
+
+        if (togglePassword && password) {
+            togglePassword.addEventListener('click', function () {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // --- FUNÇÃO DE LOGIN FIREBASE ---
+        const loginForm = document.querySelector('.login-form');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
+
+                let loginIdentifier = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                const btnLogin = document.querySelector('.btn-login');
+                const originalButtonText = btnLogin.textContent;
+                
+                if (!isValidEmail(loginIdentifier)) {
+                    alert('A autenticação com Firebase exige um formato de e-mail. Por favor, insira um e-mail válido.');
+                    return; 
+                }
+
+                btnLogin.textContent = 'Entrando...';
+                btnLogin.disabled = true;
+
+                try {
+                    const userCredential = await auth.signInWithEmailAndPassword(loginIdentifier, password);
+                    
+                    console.log('Login bem-sucedido!', userCredential.user); 
+                    alert('Login bem-sucedido! Redirecionando...'); 
+                    window.location.href='pagina-usuario.html';
+
+                } catch (error) {
+                    console.error('Erro no login:', error.message, error.code);
+                    let errorMessage = 'Erro ao fazer login. Verifique seu e-mail e senha.';
+                    
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'Usuário não encontrado.';
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'Senha incorreta.';
+                    } else if (error.code === 'auth/invalid-email') { 
+                        errorMessage = 'O formato do e-mail é inválido. Se for CPF/CNPJ, consulte o administrador.';
+                    } else if (error.code === 'auth/too-many-requests') {
+                         errorMessage = 'Acesso bloqueado temporariamente. Tente novamente mais tarde.';
+                    }
+                    
+                    alert(errorMessage);
+
+                } finally {
+                    btnLogin.textContent = originalButtonText;
+                    btnLogin.disabled = false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -118,5 +118,157 @@
 </script>
 
 
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Adoteaí - Área do Usuário</title>
+
+  <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        /* Adiciona espaço no topo para o conteúdo não ficar escondido atrás do navbar */
+        padding-top: 60px; 
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        text-align: center;
+        /* Garante que o container esteja visível */
+        margin-top: 200px; 
+    }
+
+    h1 {
+        margin-bottom: 2rem;
+        color: #444;
+        color: #333; 
+    }
+
+    .menu {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 2rem auto; 
+        text-align: center;
+        
+        /* Reduzimos o margin-top para que o h1 possa aparecer acima */
+        margin-top: 50px; 
+    }
+
+    /* Aplica o estilo tanto para links quanto para o botão de Sair */
+    .menu a, .menu button { 
+        background: #eca487;
+        color: #fff;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: 0.2s;
+        cursor: pointer;
+        border: none; /* Remove a borda padrão do botão */
+    }
+
+    .menu a:hover, .menu button:hover {
+        opacity: 0.8;
+        transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body> 
+  <header>
+    <nav class="navbar">
+      <div class="logo-container"> <img
+          src="https://i.postimg.cc/BvbcYbWy/Chat-GPT-Image-16-de-out-de-2025-10-56-29-removebg-preview-1.png"
+          class="logo"></div>
+      <ul class="nav-links"> <a href="index.html#home">Inicio</a>
+        <li><a href="index.html#sobre">Sobre</a></li>
+        <li><a href="index.html#pets">Pets</a></li>
+        <li><a href="index.html#localização">Localização</a></li>
+        <li><a href="teste-login.html">Voltar</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <h1 id="boasVindas">Carregando...</h1> 
+  </div>
+
+  <div class="menu">
+    <a href="cadastrar-pet.html">Cadastrar Pet</a>
+    <a href="index.html#pets">Visualizar Pets</a>
+    <button id="logout-btn">Sair</button> 
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- 1. CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE ---
+        // **IMPORTANTE: Mantenha esta configuração idêntica à dos seus outros arquivos**
+        const firebaseConfig = {
+            apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
+            authDomain: "adoteai.firebaseapp.com",
+            projectId: "adoteai",
+            storageBucket: "adoteai.firebasestorage.app",
+            messagingSenderId: "936118376881",
+            appId: "1:936118376881:web:704edb4cb3b861fa58c590",
+            measurementId: "G-5SWYF0Y1JK"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = app.auth(); 
+        
+        // --- 2. LÓGICA DE EXIBIÇÃO E CHECAGEM DE AUTENTICAÇÃO ---
+        
+        const elementoH1 = document.getElementById('boasVindas');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Esta função é executada sempre que o estado de autenticação muda (login, logout, recarga)
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                // Usuário está logado. Puxa o nome de exibição (displayName).
+                const nomeUsuario = user.displayName;
+                
+                if (nomeUsuario) {
+                    // Se o nome existir no Firebase (definido no cadastro), exibe a saudação
+                    elementoH1.textContent = "Bem-vindo(a), " + nomeUsuario.split(' ')[0] + "!";
+                } else {
+                    // Se o nome não existir, usa uma saudação genérica
+                    elementoH1.textContent = "Bem-vindo(a) à Área do Usuário!";
+                }
+            } else {
+                // Usuário não está logado.
+                console.log("Usuário não logado. Redirecionando para login...");
+                window.location.href = 'index.html'; 
+            }
+        });
+        
+        // --- 3. FUNCIONALIDADE DE LOGOUT ---
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await auth.signOut();
+                    // O onAuthStateChanged (acima) detectará o logout e fará o redirecionamento.
+                } catch (error) {
+                    console.error("Erro ao fazer logout:", error);
+                    alert("Erro ao fazer logout. Tente novamente.");
+                }
+            });
+        }
+    </script>
 </body>
 </html>

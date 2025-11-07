@@ -21,6 +21,7 @@
                 <li><a href="#pets">Pets</a></li>
                 <li><a href="#localização">Localização</a></li>
                 <li><a href="cadastre-se.html">Cadastre-se</a></li> 
+                <li><a href="teste-login.html">Entrar</a></li>
             </ul>
 
         </nav>
@@ -54,14 +55,16 @@
             </div>
         </section>
 
-        <section id="pets" class="pets"> 
-            <div class="container">
-                <h2>Nossos Pets disponíveis</h2>
-                <div class="animais-grid">
-                    <p style="grid-column: 1 / -1; text-align: center;">Carregando pets...</p>
-                </div>
+       <section id="pets" class="pets">
+    <div class="container">
+        <h2>Nossos Pets disponíveis</h2>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <p style="grid-column: 1 / -1; text-align: center;">Carregando pets...</p>
             </div>
-        </section>
+            <button class="carousel-button prev">❮</button> <button class="carousel-button next">❯</button> </div>
+    </div>
+</section>
 
         <section id="localização" class="localização">
             <div class="container">
@@ -86,12 +89,12 @@
 
     <script async src="https://app.gptmaker.ai/widget/3E8AC052784BB2D3367ACE803BDA0EC1/float.js"></script>
 
-    <script type="module">
-        // Importa as funções necessárias (versão 9 do Firebase, compatível com o tipo="module")
+   <script type="module">
+        // Importa as funções necessárias
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
         
-        // Sua configuração do Firebase (USANDO SEU CÓDIGO FORNECIDO)
+        // Sua configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
             authDomain: "adoteai.firebaseapp.com",
@@ -107,54 +110,142 @@
         const db = getFirestore(app); 
         
         // *******************************************************************
-        // FUNÇÃO PARA EXIBIR PETS (LÓGICA INCLUÍDA)
+        // VARIÁVEIS E FUNÇÕES DO CARROSSEL
         // *******************************************************************
-        async function exibirPets() {
-            const container = document.querySelector(".animais-grid");
-            if (!container) return; 
+        let currentSlide = 0;
+        let cardWidth = 0; 
+        const cardsToShow = 3; 
 
-            // Avisa o usuário que está carregando
-            container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">Carregando pets...</p>';
-
-            try {
-                // Referência à coleção "pets" no Firestore
-                const petsCollection = collection(db, "pets");
-                // Pega todos os documentos da coleção
-                const petSnapshot = await getDocs(petsCollection);
-                
-                container.innerHTML = ''; // Limpa o aviso de carregamento
-                
-                if (petSnapshot.empty) {
-                    container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">Nenhum pet cadastrado no banco de dados.</p>';
-                    return;
-                }
-
-                // Itera sobre os resultados e constrói o HTML dos cards
-                petSnapshot.forEach((doc) => {
-                    const pet = doc.data();
-                    
-                    // Assume que a foto padrão é '🐾' se não houver um campo específico
-                    const icon = pet.tipo === 'Cachorro' ? '🐶' : (pet.tipo === 'Gato' ? '🐱' : '🐾');
-                    
-                    const cardHTML = `
-                        <article class="produto-card">
-                            <div class="produto-icon">${icon}</div>
-                            <h3>${pet.nome || pet.tipo || 'Pet sem nome'}</h3> 
-                            <p>Adote seu amiguinho</p>
-                            <span class="descrição">${pet.descricao || 'Descrição não disponível.'}</span>
-                        </article>
-                    `;
-                    container.innerHTML += cardHTML;
-                });
-
-            } catch (error) {
-                console.error("Erro ao carregar pets:", error);
-                container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: red;">Erro ao carregar os pets do Firebase.</p>';
+        function calculateCardWidth() {
+            const track = document.querySelector('.carousel-track');
+            const firstCard = track ? track.querySelector('.produto-card') : null;
+            if (firstCard) {
+                // Calcula a largura real do card, incluindo margens
+                const style = getComputedStyle(firstCard);
+                cardWidth = firstCard.offsetWidth + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
             }
         }
 
-        // Executa a função após o carregamento da página
-        document.addEventListener('DOMContentLoaded', exibirPets); 
+        function updateCarousel() {
+            const track = document.querySelector('.carousel-track');
+            if (track && cardWidth > 0) {
+                track.style.transform = `translateX(${-currentSlide * cardWidth}px)`;
+            }
+        }
+
+        function moveCarousel(direction) {
+            const track = document.querySelector('.carousel-track');
+            if (!track) return;
+            
+            calculateCardWidth(); // Recalcula antes de mover
+
+            const totalCards = track.children.length;
+            if (totalCards === 0) return;
+
+            let newSlide = currentSlide + direction;
+            
+            // Lógica para loop infinito ou limites
+            if (newSlide < 0) {
+                newSlide = totalCards - cardsToShow; // Volta para o final
+            } else if (newSlide >= totalCards - (cardsToShow -1)) { 
+                 // Ajusta limite para mostrar o último card sem espaço em branco
+                newSlide = 0; // Volta para o início
+            }
+            
+            currentSlide = newSlide;
+            updateCarousel();
+        }
+
+
+        // *******************************************************************
+        // FUNÇÃO PARA EXIBIR PETS (COM TRATAMENTO DE ERROS)
+        // *******************************************************************
+        async function exibirPets() {
+            const carouselTrack = document.querySelector(".carousel-track");
+            if (!carouselTrack) return; 
+
+            // Deixa a mensagem de carregamento inicial
+            carouselTrack.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; width: 100%;">Carregando pets...</p>';
+
+            try {
+                // 1. BUSCA DE DADOS
+                const petsCollection = collection(db, "pets");
+                const petSnapshot = await getDocs(petsCollection);
+                
+                carouselTrack.innerHTML = ''; // Limpa o aviso de carregamento
+                
+                if (petSnapshot.empty) {
+                    carouselTrack.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; width: 100%;">Nenhum pet cadastrado no banco de dados.</p>';
+                    return;
+                }
+
+                // 2. MONTAGEM DO HTML
+                petSnapshot.forEach((doc) => {
+                    const pet = doc.data();
+                    const fotoUrl = pet.fotoUrl; // Puxando a URL da foto
+                    
+                    let mediaHTML;
+                    
+                    // LÓGICA ATUALIZADA: Prioriza fotoUrl, se for uma string válida
+                    if (fotoUrl && typeof fotoUrl === 'string' && fotoUrl.trim() !== '') {
+                        // Se houver foto, usa a tag <img>
+                        mediaHTML = `<img src="${fotoUrl}" alt="Foto de ${pet.nome || 'Pet'}" class="pet-image">`;
+                    } else {
+                        // Se não houver foto, usa o ícone (como fallback)
+                        const icon = pet.tipo === 'Cachorro' ? '🐶' : (pet.tipo === 'Gato' ? '🐱' : '🐾');
+                        mediaHTML = `<div class="produto-icon">${icon}</div>`;
+                    }
+                    
+                    const cardHTML = `
+                        <article class="produto-card">
+                            ${mediaHTML} <h3>${pet.nome || pet.tipo || 'Pet sem nome'}</h3> 
+                            <p>Adote seu amiguinho</p>
+                            <span class="descricao">${pet.descricao || 'Descrição não disponível.'}</span>
+                            <a href="teste-login.html" class="btn-adotar btn">Quero Adotar!</a> 
+                        </article>
+                    `;
+                    carouselTrack.innerHTML += cardHTML;
+                });
+                
+                // 3. INICIALIZAÇÃO DO CARROSSEL
+                
+                // Aguarda um momento para o navegador renderizar os cards antes de medir.
+                window.requestAnimationFrame(() => {
+                     calculateCardWidth(); 
+                     updateCarousel();
+                });
+                
+
+            } catch (error) {
+                // Se o erro for na conexão, a mensagem "Carregando..." persiste
+                console.error("ERRO GRAVE ao carregar pets do Firebase:", error);
+                
+                // Se der erro, substitui a mensagem de carregamento por um erro claro.
+                carouselTrack.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: red; width: 100%;">Falha ao carregar os pets. Verifique a chave API ou as Regras do Firebase.</p>';
+            }
+        }
+
+        // *******************************************************************
+        // EVENT LISTENER PRINCIPAL
+        // *******************************************************************
+        document.addEventListener('DOMContentLoaded', () => {
+            exibirPets(); 
+            
+            const prevButton = document.querySelector('.carousel-button.prev');
+            const nextButton = document.querySelector('.carousel-button.next');
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => moveCarousel(-1));
+            }
+            if (nextButton) {
+                nextButton.addEventListener('click', () => moveCarousel(1));
+            }
+
+            window.addEventListener('resize', () => {
+                calculateCardWidth();
+                updateCarousel();
+            });
+        }); 
     </script>
     </body>
 </html>

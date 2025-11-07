@@ -65,7 +65,7 @@
         <div class="container">
             <h2>Cadastre um Pet</h2>
             
-            <form id="pet-form" onsubmit="return false;" class="cadastro-form">
+            <form id="pet-form" class="cadastro-form">
                 <label for="nome">Nome do Pet:</label>
                 <input type="text" id="nome" name="nome" placeholder="Digite o nome do pet" required>
 
@@ -83,8 +83,10 @@
                 <label for="foto">Foto do Pet:</label>
                 <input type="file" id="foto" name="foto" accept="image/*" required>
 
-                <button type="button" onclick="salvarPet()" class="btn">CADASTRE UM PET</button>
+                <button type="submit" class="btn">CADASTRE UM PET</button>
             </form>
+
+            <p id="status-mensagem" style="margin-top: 15px; font-weight: bold;"></p>
         </div>
     </section>
 </main>
@@ -94,61 +96,96 @@
 </footer>
 
 <script type="module">
-    // Importa as funções necessárias do SDK do Firebase
+    // IMPORTAÇÕES ATUALIZADAS: Adicionado Firebase Storage
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
     // Sua configuração do Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDc8aaQ2LoBe10kIqxSaCTEwj-FgLbJHJM",
         authDomain: "adoteai.firebaseapp.com",
         projectId: "adoteai",
-        storageBucket: "adoteai.firebasestorage.app",
+        storageBucket: "adoteai.firebasestorage.app", // ESSENCIAL para o Storage
         messagingSenderId: "936118376881",
         appId: "1:936118376881:web:704edb4cb3b861fa58c590",
         measurementId: "G-5SWYF0Y1JK"
     };
 
-    // Inicializa o Firebase
+    // Inicializa o Firebase, Firestore e Storage
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app); // Inicializa o Firestore
+    const db = getFirestore(app); 
+    const storage = getStorage(app); // Inicializa o Storage
 
-    // Torna a função salvarPet global (acessível pelo onclick)
-    window.salvarPet = async function() {
+    // Referência aos elementos
+    const form = document.getElementById('pet-form');
+    const statusMensagem = document.getElementById('status-mensagem');
+
+    async function salvarPet(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+        
+        statusMensagem.textContent = "Validando dados...";
+
         // 1. Recupera os valores dos campos
         const nome = document.getElementById('nome').value.trim();
         const tipo = document.getElementById('tipo').value;
         const descricao = document.getElementById('descricao').value.trim();
         const fotoInput = document.getElementById('foto');
+        const fotoFile = fotoInput.files[0];
         
-        if (!nome || !tipo || !descricao || fotoInput.files.length === 0) {
-            alert("Por favor, preencha todos os campos e selecione uma foto.");
+        if (!nome || !tipo || !descricao || !fotoFile) {
+            statusMensagem.textContent = "Por favor, preencha todos os campos e selecione uma foto.";
             return;
         }
 
-        // 2. Cria o objeto Pet
-        const novoPet = {
-            nome: nome,
-            tipo: tipo,
-            descricao: descricao,
-            // A foto é complexa, salvamos o nome do arquivo para referência
-            nomeFoto: fotoInput.files[0].name, 
-            dataCadastro: serverTimestamp() // Garante data de registro precisa
-        };
-
-        // 3. Salva no banco de dados "pets" do Firebase
         try {
+            // --- ETAPA 1: UPLOAD DA IMAGEM PARA O FIREBASE STORAGE ---
+            statusMensagem.textContent = "Fazendo upload da foto... Por favor, aguarde.";
+            
+            // Cria um caminho único no Storage (ex: pets/1678880000000-foto.jpg)
+            const fileName = `pets/${Date.now()}-${fotoFile.name}`;
+            const storageRef = ref(storage, fileName);
+
+            // Faz o upload do arquivo
+            const uploadResult = await uploadBytes(storageRef, fotoFile);
+
+            // Pega a URL pública que o carrossel precisa
+            const fotoUrl = await getDownloadURL(uploadResult.ref);
+            
+            // --- ETAPA 2: SALVAR DADOS E URL NO FIRESTORE ---
+            statusMensagem.textContent = "Salvando informações do pet no banco de dados...";
+
+            // 2. Cria o objeto Pet com a URL COMPLETA
+            const novoPet = {
+                nome: nome,
+                tipo: tipo,
+                descricao: descricao,
+                fotoUrl: fotoUrl, // <--- CAMPO CORRIGIDO COM A URL COMPLETA
+                dataCadastro: serverTimestamp(),
+                disponivel: true 
+            };
+
+            // 3. Salva no banco de dados "pets" do Firebase
             await addDoc(collection(db, "pets"), novoPet);
-            alert(`Pet "${nome}" cadastrado com sucesso e está visível para todos!`);
-            // Limpa o formulário após o sucesso
-            document.getElementById('pet-form').reset(); 
-            // Opcional: Redireciona para a página de pets
-            // window.location.href = "pets.html"; 
+
+            // --- ETAPA 3: FINALIZAÇÃO ---
+            statusMensagem.textContent = `✅ Pet "${nome}" cadastrado com sucesso! Redirecionando...`;
+            form.reset(); // Limpa o formulário
+            
+            // Redireciona para o carrossel após 2 segundos
+            setTimeout(() => {
+                 // Redireciona para o index.html e rola até a seção #pets
+                 window.location.href = 'index.html#pets'; 
+            }, 2000); 
+
         } catch (error) {
-            console.error("Erro ao cadastrar pet: ", error);
-            alert("Erro ao cadastrar pet. Verifique o console.");
+            console.error("Erro no cadastro:", error);
+            statusMensagem.textContent = `❌ Erro ao cadastrar o pet: ${error.message}. Verifique as Regras do Storage!`;
         }
     }
+
+    // Adiciona o listener ao evento de submit do formulário
+    form.addEventListener('submit', salvarPet);
 </script>
 
 </body>
